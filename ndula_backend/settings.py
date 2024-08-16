@@ -135,6 +135,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT =BASE_DIR.joinpath(BASE_DIR,"static")
+# CORS_ORIGIN_ALLOW_ALL=True
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

@@ -24,12 +24,12 @@ class BrandNameApi(APIView):
             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 class ShoesApi(APIView):
-    # def get_object(self,request):
-    #     shoe =Shoe.objects.all()
-    #     return shoe
+    
     def get(self,request):
         shoe =Shoe.objects.all()
-        serializer =Shoeerializer(shoe,many=True)
+        serializer =Shoeerializer(shoe,many=True,context={"request":request})
+        
+      
         return Response(serializer.data,status=status.HTTP_200_OK)
     
     def post(self,request):

@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view,APIView;
 from  rest_framework import status;
 # from django.contrib.auth.models import User;
 from .models import Shoe,BrandName;
-from .serializers import Shoeerializer,BrandNameSerializer;
+from .serializers import ShoeSerializer,BrandNameSerializer;
 
 
 class BrandNameApi(APIView):
@@ -27,19 +27,44 @@ class ShoesApi(APIView):
     
     def get(self,request):
         shoe =Shoe.objects.all()
-        serializer =Shoeerializer(shoe,many=True,context={"request":request})
+        serializer =ShoeSerializer(shoe,many=True,context={"request":request})
         
       
         return Response(serializer.data,status=status.HTTP_200_OK)
     
-    def post(self,request):
+    def post(self,request,*args, **kwargs):
         data =request.data
-        serializer =Shoeerializer(data,partial=True)
+        if data["action"]=="createShoe":
+            return self.createShoe(request)
+            
+                
+            
+        
+      
+    def createShoe(self,request):
+        data =request.data
+        serializer =ShoeSerializer(data,partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data,status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        
+    def patch(self,request,pk):
+        data =request.data
+        if "likes" in data:
+            likes =data["likes"]
+            shoes =get_object_or_404(Shoe,id=pk)
+            shoes.likes=likes
+            shoes.save()
+            serializer =ShoeSerializer(shoes,context={"request":request})
+            return Response({"message":"likes added",
+                             "data":serializer.data},status=status.HTTP_201_CREATED)
+        else:
+            return Response({"message":"please add like to the request"},status=status.HTTP_400_BAD_REQUEST)
+        
+                 
+                
         
 
 
@@ -49,13 +74,13 @@ class ShoesApi(APIView):
 # @api_view(["GET"])
 # def getShoe(request):
 #     obj=Shoe.objects.all()
-#     serializer =Shoeerializer(obj,many=True)
+#     serializer =ShoeSerializer(obj,many=True)
 #     return Response(serializer.data,status=status.HTTP_200_OK)
 
 # @api_view(["POST"])
 # def post_product(reqeust):
 #     data =reqeust.data
-#     serializer =Shoeerializer(data=data,many=True)
+#     serializer =ShoeSerializer(data=data,many=True)
 #     if serializer.is_valid():
 #         serializer.save()
 #         return Response(serializer.data,status=status.HTTP_200_OK)
@@ -69,7 +94,7 @@ class ShoesApi(APIView):
 #    data =request.data
    
 #    product =get_object_or_404(Shoe,id =id)
-#    serializer =Shoeerializer(data=data,partial=True) 
+#    serializer =ShoeSerializer(data=data,partial=True) 
 #    if serializer.is_valid():
 #        serializer.save()
 #        return Response(serializer.data,status=status.HTTP_200_OK)

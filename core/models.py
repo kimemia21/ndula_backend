@@ -17,6 +17,7 @@ class Shoe(models.Model):
     size = models.IntegerField()
     brandName =models.ForeignKey(BrandName,on_delete=models.CASCADE)
     likes =models.IntegerField()
+    description =models.TextField(default="no description",blank=True)
     
     
     def __str__(self):

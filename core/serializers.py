@@ -1,36 +1,28 @@
-from rest_framework import serializers;
-from .models import Shoe,BrandName
+from rest_framework import serializers
+from .models import Shoe, BrandName
 
 class BrandNameSerializer(serializers.ModelSerializer):
-    logo_url =serializers.SerializerMethodField()
-    
-    
+    logo_url = serializers.SerializerMethodField()
+
     class Meta:
-        model =BrandName
-        fields =["name","logo,","logo_url"]
-    
-    def get_image_url(self,obj):
+        model = BrandName
+        fields = ["name", "brand_logo", "logo_url"]
+
+    def get_logo_url(self, obj):
+        if obj.brand_logo:
+            return self.context["request"].build_absolute_uri(obj.brand_logo.url)
+        return None
+
+class ShoeSerializer(serializers.ModelSerializer):
+    brand_name = serializers.CharField(source='brandName.name', read_only=True)
+    brand_details = BrandNameSerializer(source='brandName', read_only=True)
+    image_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Shoe
+        fields = ['id', 'name', 'price', 'image', 'image_url', 'gender', 'size', 'brandName', 'brand_name', 'brand_details', 'likes',"description"]
+
+    def get_image_url(self, obj):
         if obj.image:
-            
             return self.context["request"].build_absolute_uri(obj.image.url)
         return None
-            
-        
-
-
-
-
-class Shoeerializer(serializers.ModelSerializer):
-    # product_image =serializers.ImageField(max_length=None, use_url=True)
-    brand_name =BrandNameSerializer(read_only=True)
-    image_url =serializers.SerializerMethodField()
-    class Meta:
-        model=Shoe
-        fields = ['id', 'name', 'price', 'image', 'image_url', 'gender', 'size', 'brandName', 'brand_name', 'likes']
-    def get_image_url(self,obj):
-        if obj.image:
-            
-            return self.context["request"].build_absolute_uri(obj.image.url)
-        return None    
-
-        

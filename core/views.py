@@ -51,11 +51,13 @@ class ShoesApi(APIView):
             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
         
     def patch(self,request,pk):
+    
         data =request.data
         if "likes" in data:
             likes =data["likes"]
             shoes =get_object_or_404(Shoe,id=pk)
             shoes.likes=likes
+            print(shoes.likes)
             shoes.save()
             serializer =ShoeSerializer(shoes,context={"request":request})
             return Response({"message":"likes added",

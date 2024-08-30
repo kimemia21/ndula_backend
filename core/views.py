@@ -4,7 +4,7 @@ from rest_framework.response import Response;
 from rest_framework.decorators import api_view,APIView;
 from  rest_framework import status;
 # from django.contrib.auth.models import User;
-from .models import Shoe,BrandName;
+from .models import Shoe,BrandName,Cart,CartItem;
 from .serializers import ShoeSerializer,BrandNameSerializer;
 
 
@@ -65,6 +65,39 @@ class ShoesApi(APIView):
         else:
             return Response({"message":"please add like to the request"},status=status.HTTP_400_BAD_REQUEST)
         
+class Cart(APIView):
+    def get(self, request ):
+        cart =Cart.objects.all()
+        serializer =ShoeSerializer(cart, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    def post(self,request):
+        data =request.data
+        serializer =ShoeSerializer(data=data, many=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class CartItem(APIView):
+    def post(self,request):
+        data =request.data
+        serilizer =CartItem(data=data,many=True)
+        if serilizer.is_valid():
+            serilizer.save()
+            return Response({"message":"sucess"})
+        else:
+            return Response({"message":"serilizer is invalid"},status=status.HTTP_201_CREATED)
+    def get(self,request):
+        cartItem =CartItem.objects.all()
+        serializer =CartItem(cartItem, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    
+    
+        
+
+                   
+                    
                  
                 
         

@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User;
 
 class BrandName(models.Model):
     name =models.CharField(max_length=100)
@@ -7,6 +8,7 @@ class BrandName(models.Model):
     def __str__(self) -> str:
         return self.name 
     
+
 
 
 class Shoe(models.Model):
@@ -22,7 +24,23 @@ class Shoe(models.Model):
     
     def __str__(self):
         return self.name
+
+
+class Cart(models.Model):
+    # user=models.ForeignKey(User,on_delete=models.CASCADE)
+    created_at =models.DateField(auto_now_add=True,)
     
+    
+class CartItem(models.Model):
+    # user =models.ForeignKey(User, on_delete=models.CASCADE)
+    cart =models.ForeignKey(Cart, on_delete=models.CASCADE)   
+    shoe =models.ForeignKey(Shoe, on_delete=models.CASCADE) 
+
+
+
+
+
+
     
 
 

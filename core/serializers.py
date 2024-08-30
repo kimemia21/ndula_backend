@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Shoe, BrandName
+from .models import Shoe, BrandName,Cart,CartItem
 
 class BrandNameSerializer(serializers.ModelSerializer):
     logo_url = serializers.SerializerMethodField()
@@ -26,3 +26,17 @@ class ShoeSerializer(serializers.ModelSerializer):
         if obj.image:
             return self.context["request"].build_absolute_uri(obj.image.url)
         return None
+    
+class CartItemSerilization(serializers.ModelSerializer):
+    class Meta:
+        model=CartItem
+        fields =("id,","cart","shoe")
+        
+class CartSerilization(serializers.ModelSerializer):
+    class Meta:
+        model =Cart
+        fields ="__all__"        
+        
+    
+        
+    

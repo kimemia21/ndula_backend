@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view,APIView;
 from  rest_framework import status;
 # from django.contrib.auth.models import User;
 from .models import Shoe,BrandName,Cart,CartItem;
-from .serializers import ShoeSerializer,BrandNameSerializer;
+from .serializers import ShoeSerializer,BrandNameSerializer,CartSerilization;
 
 
 class BrandNameApi(APIView):
@@ -89,7 +89,7 @@ class CartItemView(APIView):
             return Response({"message":"serilizer is invalid"},status=status.HTTP_201_CREATED)
     def get(self,request):
         cartItem =CartItem.objects.all()
-        serializer =CartItem(cartItem, many=True)
+        serializer =(cartItem)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     

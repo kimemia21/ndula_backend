@@ -27,9 +27,10 @@ class Shoe(models.Model):
 
 
 class Cart(models.Model):
-    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    
+    user=models.ForeignKey(User,on_delete=models.CASCADE,default=1)
     created_at =models.DateField(auto_now_add=True,)
-    name =models.CharField(max_length=150)
+    name =models.CharField(max_length=150,default="admin",blank=True)
     
     def save(self, *args, **kwargs):
         self.name =self.user.username
@@ -44,10 +45,11 @@ class Cart(models.Model):
     
     
 class CartItem(models.Model):
-    user =models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    user =models.ForeignKey(User, on_delete=models.CASCADE,default=1)
     cart =models.ForeignKey(Cart, on_delete=models.CASCADE)   
     shoe =models.ForeignKey(Shoe, on_delete=models.CASCADE)
-    name =models.CharField(max_length=150) 
+    name =models.CharField(max_length=150,default="admin",blank=True) 
     
     def save(self,*args, **kwargs):
         self.name =self.shoe.name

@@ -32,24 +32,26 @@ class ShoeSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model=User
-        fields =("id", "username", "email")
+        fields =["id", "username", "email"]
 
 
 
     
 class CartItemSerilization(serializers.ModelSerializer):
-    
+    price = serializers.DecimalField(source='shoe.price', max_digits=10, decimal_places=2, read_only=True)
+
     class Meta:
-        model=CartItem
-        fields =("id,","cart","shoe","name")
+        model = CartItem
+        fields = ["id", "cart", "shoe", "name", "price"]
         
 class CartSerilization(serializers.ModelSerializer):
-    items =CartItemSerilization(many=True,source="cartitem_set",read_only=True)
+    items =CartItemSerilization(many=True,read_only=True,source="cartitem_set")
+    total_price = serializers.SerializerMethodField()
     
     class Meta:
         model =Cart
-        fields =("id", "user","name", "items")       
-        
+        fields =["id", "user","name", "items"]      
+     
     
         
     

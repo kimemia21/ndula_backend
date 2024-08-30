@@ -1,5 +1,8 @@
 from rest_framework import serializers
 from .models import Shoe, BrandName,Cart,CartItem
+from django.contrib.auth.models import User
+from django.contrib.auth.models import User
+from django.contrib.auth.models import User
 
 class BrandNameSerializer(serializers.ModelSerializer):
     logo_url = serializers.SerializerMethodField()
@@ -26,16 +29,26 @@ class ShoeSerializer(serializers.ModelSerializer):
         if obj.image:
             return self.context["request"].build_absolute_uri(obj.image.url)
         return None
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=User
+        fields =("id", "username", "email")
+
+
+
     
 class CartItemSerilization(serializers.ModelSerializer):
+    
     class Meta:
         model=CartItem
-        fields =("id,","cart","shoe")
+        fields =("id,","cart","shoe","name")
         
 class CartSerilization(serializers.ModelSerializer):
+    items =CartItemSerilization(many=True,source="cartitem_set",read_only=True)
+    
     class Meta:
         model =Cart
-        fields ="__all__"        
+        fields =("id", "user","name", "items")       
         
     
         

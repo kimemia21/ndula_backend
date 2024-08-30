@@ -65,7 +65,7 @@ class ShoesApi(APIView):
         else:
             return Response({"message":"please add like to the request"},status=status.HTTP_400_BAD_REQUEST)
         
-class Cart(APIView):
+class CartView(APIView):
     def get(self, request ):
         cart =Cart.objects.all()
         serializer =ShoeSerializer(cart, many=True)
@@ -78,7 +78,7 @@ class Cart(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-class CartItem(APIView):
+class CartItemView(APIView):
     def post(self,request):
         data =request.data
         serilizer =CartItem(data=data,many=True)
